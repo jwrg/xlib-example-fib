@@ -1,12 +1,13 @@
 /*
  * fib.c -- a simple X program that illustrates the golden ratio and spiral
  *
- * gcc fib.c -o fib -lX11
+ * gcc fib.c -o fib -lX11 -lm
  */
 
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <stdio.h> 
+#include <math.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -19,7 +20,6 @@
  */
 void set_colour(Display *display, int s, Colormap cmap, unsigned int rgb_value)
 {
-  /* set colour to something nice */
   XColor colour;
   colour.red = (rgb_value & 0xFF0000) >> 8;
   colour.green = (rgb_value & 0xFF00);
@@ -45,13 +45,13 @@ void draw_section(Display *display, Window window, int s, Colormap cmap, unsigne
       XDrawArc(display, window, DefaultGC(display, s), xpos + 1, ypos + 1, 2 * height - 2, 2 * height - 2, 90 * 64, 90 * 64);
       break;
     case 1:
-      XDrawArc(display, window, DefaultGC(display, s), xpos - height + 1, ypos + 1, 2*height - 2, 2*height - 2, 0 * 64, 90 * 64);
+      XDrawArc(display, window, DefaultGC(display, s), xpos - height + 1, ypos + 1, 2 * height - 2, 2 * height - 2, 0 * 64, 90 * 64);
       break;
     case 2:
-      XDrawArc(display, window, DefaultGC(display, s), xpos + height * (M_PHI - 2) + 1, ypos - height + 1, 2*height - 1, 2*height - 2, 0 * 64, -90 * 64);
+      XDrawArc(display, window, DefaultGC(display, s), xpos + height * (M_PHI - 2) + 1, ypos - height + 1, 2 * height - 1, 2 * height - 2, 270 * 64, 90 * 64);
       break;
     case 3:
-      XDrawArc(display, window, DefaultGC(display, s), xpos + 1, ypos + height * (M_PHI - 2) + 1, 2*height - 2, 2*height - 2, 180 * 64, 90 * 64);
+      XDrawArc(display, window, DefaultGC(display, s), xpos + 1, ypos + height * (M_PHI - 2) + 1, 2 * height - 2, 2 * height - 2, 180 * 64, 90 * 64);
       break;
   }
 }
@@ -59,7 +59,7 @@ void draw_section(Display *display, Window window, int s, Colormap cmap, unsigne
 void draw_spiral(Display *display, Window window, int s, Colormap cmap, unsigned int xpos, unsigned int ypos, unsigned int height, unsigned int seed)
 {
 unsigned short index = 0;
-  while (height > 1)
+  while (height > 2)
   {
     set_colour(display, s, cmap, rand_r(&seed));
     draw_section(display, window, s, cmap, xpos, ypos, height, index);
@@ -73,7 +73,8 @@ unsigned short index = 0;
         ypos += height;
         break;
     }
-    height /= M_PHI;
+    height = round((double)height / M_PHI);
+    
     index++;
   }
 }
