@@ -73,8 +73,8 @@ unsigned short index = 0;
         ypos += height;
         break;
     }
+
     height = round((double)height / M_PHI);
-    
     index++;
   }
 }
@@ -91,7 +91,7 @@ int main(void)
   Colormap cmap;
   XColor colour;
 
-  char *window_name = "Fib";
+  char *window_name = "Fib -- an xlib golden spiral";
   char *icon_name = "Fib";
 
   int s;
